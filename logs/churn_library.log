@@ -1,0 +1,48 @@
+01/22/2022 18:04:41 - test_import - line:  32- INFO - Testing import_data()
+01/22/2022 18:04:41 - test_import - line:  35- INFO - Testing import_data(): TEST 1 
+01/22/2022 18:04:41 - import_data - line:  44- ERROR -  Assertion Error - Missing input parameter: path - path to input CSV file
+01/22/2022 18:04:41 - test_import - line:  41- INFO - Testing import_data(): TEST 1 - Failed - import_data raised error called with no input parm
+01/22/2022 18:04:41 - test_import - line:  45- INFO - Testing import_data(): TEST 2 
+01/22/2022 18:04:41 - test_import - line:  49- INFO - Testing import_data(): TEST 2 - Passed
+01/22/2022 18:04:41 - test_import - line:  56- INFO - Testing import_data(): TEST 3 
+01/22/2022 18:04:41 - test_import - line:  60- INFO - Testing import_data(): TEST 3 - Passed - input file has 10127 rows and 10127 columns 
+01/22/2022 18:04:41 - test_eda - line:  78- INFO - Testing perform_eda()
+01/22/2022 18:04:41 - test_eda - line:  90- INFO - Testing perform_eda(): TEST 1 
+01/22/2022 18:04:42 - test_eda - line:  93- INFO - Testing perform_eda(): TEST 1 - Passed - perform_eda completed successfully
+01/22/2022 18:04:42 - test_eda - line:  104- INFO - Testing perform_eda(): TEST 2 
+01/22/2022 18:04:42 - test_eda - line:  107- INFO - Testing perform_eda(): TEST 2 - Passed - churn_distribution.png exists
+01/22/2022 18:04:42 - test_eda - line:  104- INFO - Testing perform_eda(): TEST 3 
+01/22/2022 18:04:42 - test_eda - line:  107- INFO - Testing perform_eda(): TEST 3 - Passed - customer_age_distribution.png exists
+01/22/2022 18:04:42 - test_eda - line:  104- INFO - Testing perform_eda(): TEST 4 
+01/22/2022 18:04:42 - test_eda - line:  107- INFO - Testing perform_eda(): TEST 4 - Passed - marital_status_distribution.png exists
+01/22/2022 18:04:42 - test_eda - line:  104- INFO - Testing perform_eda(): TEST 5 
+01/22/2022 18:04:42 - test_eda - line:  107- INFO - Testing perform_eda(): TEST 5 - Passed - total_transaction_distribution.png exists
+01/22/2022 18:04:42 - test_eda - line:  104- INFO - Testing perform_eda(): TEST 6 
+01/22/2022 18:04:42 - test_eda - line:  107- INFO - Testing perform_eda(): TEST 6 - Passed - correlation_heatmap.png exists
+01/22/2022 18:04:42 - test_eda - line:  104- INFO - Testing perform_eda(): TEST 7 
+01/22/2022 18:04:42 - test_eda - line:  107- INFO - Testing perform_eda(): TEST 7 - Passed - card_category_distribution.png exists
+01/22/2022 18:04:42 - test_encoder_helper - line:  128- INFO - Testing encoder_helper()
+01/22/2022 18:04:42 - test_encoder_helper - line:  133- INFO - Testing encoder_helper(): TEST 1 
+01/22/2022 18:04:42 - test_encoder_helper - line:  136- INFO - Testing encoder_helper(): TEST 1 - Passed
+01/22/2022 18:04:42 - test_encoder_helper - line:  147- INFO - Testing encoder_helper(): TEST 2 
+01/22/2022 18:04:42 - encoder_helper - line:  159- ERROR -  Assertion Error - category_list item 'some_nonexisting_column' not found in dataframe
+01/22/2022 18:04:42 - test_encoder_helper - line:  153- ERROR - Testing encoder_helper(): TEST 2 - Failed - Assertion Error - invalid column name in category_list param
+01/22/2022 18:04:42 - test_encoder_helper - line:  158- INFO - Testing encoder_helper(): TEST 3 
+01/22/2022 18:04:42 - encoder_helper - line:  166- ERROR -  Assertion Error - response column 'some_nonexisting_column'not found in dataframe
+01/22/2022 18:04:42 - test_encoder_helper - line:  165- ERROR - Testing encoder_helper(): TEST 3 - Failed - Assertion Error - response column 'some_nonexisting_column' doesnt exist on dataframe
+01/22/2022 18:04:42 - test_encoder_helper - line:  171- INFO - Testing encoder_helper(): TEST 4 
+01/22/2022 18:04:43 - test_encoder_helper - line:  175- INFO - Testing encoder_helper(): TEST 4 - Passed
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  195- INFO - Testing perform_feature_engineering()
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  202- INFO - Testing perform_feature_engineering(): TEST 1
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  205- INFO - Testing perform_feature_engineering(): TEST 1 - Passed - perform_feature_engineering successfully called
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  213- INFO - Testing perform_feature_engineering(): TEST 2
+01/22/2022 18:04:43 - perform_feature_engineering - line:  216- ERROR -  column SomeName not found in dataframe 
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  222- ERROR - Testing perform_feature_engineering(): TEST 2 - Failed - Assertion Error - response column <SomeName> not found in dataframe
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  227- INFO - Testing perform_feature_engineering(): TEST 3 
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  231- INFO - Testing perform_feature_engineering(): TEST 3 - Passed - perform_feature_engineering successfully called
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  240- INFO - Testing perform_feature_engineering(): TEST 4 
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  243- INFO - Testing perform_feature_engineering(): TEST 4 - Passed - X_train and y_train shape match {X_train.shape[0]} = {y_train.shape[0]}
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  254- INFO - Testing perform_feature_engineering(): TEST 5 
+01/22/2022 18:04:43 - test_perform_feature_engineering - line:  257- INFO - Testing perform_feature_engineering(): TEST 5 - Passed - X_test and y_test shape match 3039 = 3039 
+01/22/2022 18:04:43 - test_train_models - line:  278- INFO - Testing train_models()
+01/22/2022 18:04:44 - perform_feature_engineering - line:  226- ERROR -  perform_feature_engineering() - Exception encountered - Gender_Churn 
