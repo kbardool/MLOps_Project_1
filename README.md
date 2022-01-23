@@ -1,6 +1,8 @@
 # Predict Customer Churn
 
-- Project **Predict Customer Churn** of ML DevOps Engineer Nanodegree Program
+Project **Predict Customer Churn** of ML DevOps Engineer Nanodegree Program
+
+Kevin Bardool, January 2022
 
 ## Project Description
 
@@ -20,7 +22,7 @@ The following libraries are required for this project:
 *   `pylint`
 *   `autopep8`
 
-The last two were used for bring the code up to productional level clean code standards.
+The last two were used to bring the code up to production quality clean code standards.
 
 ## Implementation Notes
 
@@ -30,7 +32,7 @@ The code for this project is found in three modules:
 *   `churn_library.py`: library containing the churn modules
 *   `churn_scripts_logging_and_test.py`: Modules used to test the churn library modules.
 
-All modules have been passed thru autopep and scored at least a 9/10 score on pylint.
+All modules have been passed through `autopep8` and scored at least a 9/10 score on `pylint`.
 
 
 ## Running Files
@@ -56,7 +58,7 @@ All modules have been passed thru autopep and scored at least a 9/10 score on py
 *   `images/results`: Model performance reports and plots are written to this folder
 
 
-### Note:
+### Notes:
 
 There are a couple of refactorization ideas that can be implemented to improve the modularization 
 concepts laid out in the course, which I elected not to implement in the interest of time and proceeding 
@@ -66,5 +68,5 @@ to the next lesson.
     reports. One improvement would be to split these out to separate modules. `train_models()` would simply train one or multiple models 
     and return the fitted models (Random Forest, Logistic Regression, etc...) 
 
-*   `classification_report_image()` canbe refactorized to generate reports for one model at a time, instead of receiving 
+*   `classification_report_image()` can be refactorized to generate reports for one model at a time, instead of receiving 
     ground truth and predictions for multiple models. 
