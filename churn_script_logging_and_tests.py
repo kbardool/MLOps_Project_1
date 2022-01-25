@@ -10,8 +10,11 @@ import os
 import sys
 import logging
 import sklearn
+from datetime import datetime
 import churn_library as cls
 import churn_config as cfg
+
+timestring = lambda :datetime.now().strftime('%F %H:%M:%S:%f')
 
 logging.basicConfig(
     filename=os.path.join(cfg.LOGGING_PATH,cfg.LOGGING_FILE),
@@ -269,7 +272,7 @@ def test_train_models(train_models):
     '''
     test train_models by calling it under various test conditions:
 
-    Test 1: call passing a valid params - Should Succeed
+    Test 1: call passing valid params - Should Succeed
     Test 2: verify returned rf_model is a Random Forest classifier - Should Succeed
     Test 3: verify returned lr_model is a Logistic Regression      - Should Succeed
     Test 4: verify rf_model was successfully written (./models/rf_model.pkl) - Should Succeed
@@ -279,6 +282,7 @@ def test_train_models(train_models):
     logging.info("Testing train_models()")
     input_file = os.path.join(cfg.INPUT_PATH, cfg.INPUT_FILE)
     dframe = cls.import_data(input_file)
+    dframe = cls.encoder_helper(dframe, cfg.CAT_COLUMNS)
 
     x_train, x_test, y_train, y_test = cls.perform_feature_engineering(
         dframe, response=cfg.RESPONSE_COL)
@@ -348,8 +352,21 @@ def test_train_models(train_models):
 
 
 if __name__ == "__main__":
+    print(f" {timestring()} - Churn library moudles test start..")
     test_import(cls.import_data)
+    print(f" {timestring()} - Test import_data() completed.... ")
+    
     test_eda(cls.perform_eda)
+    print(f" {timestring()} - Test perform_eda() completed.... ")
+    
     test_encoder_helper(cls.encoder_helper)
+    print(f" {timestring()} - Test encoder_helper() completed.... ")
+    
     test_perform_feature_engineering(cls.perform_feature_engineering)
+    print(f" {timestring()} - Test perform_feature_engineering() completed.... ")
+    
+    print(f" {timestring()} - Test train_models() start.... ")
     test_train_models(cls.train_models)
+    print(f" {timestring()} - Test train_models() completed.... ")
+
+    print(f" {timestring()} - Churn library moudles test complete..")

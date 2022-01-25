@@ -41,14 +41,18 @@ All modules have been passed through `autopep8` and scored at least a 9/10 score
 
     `python churn_script_logging_and_tests.py`
 
-*   The library routines can be imported and invoked in notebooks, e.g.:
+*   The `churn_library` routines can be indivdually called from jupyter notebooks, e.g.:
 
         import churn_library as cls
         . . .
         input_file = os.path.join(cfg.INPUT_PATH, cfg.INPUT_FILE)
         df = cls.import_data(input_file)
 
-</code>
+
+*   Calling the churn_library module directly from the commands line will invoke all the modules
+    in proper succession
+
+    `python churn_library.py`
 
 
 ### Outputs:

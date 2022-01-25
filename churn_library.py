@@ -19,6 +19,8 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import joblib
+from datetime import datetime
+from warnings import simplefilter
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -26,6 +28,12 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import plot_roc_curve, classification_report
 
 import churn_config as cfg
+
+# ignore all future warnings
+simplefilter(action='ignore', category=FutureWarning)
+
+timestring = lambda :datetime.now().strftime('%F %H:%M:%S:%f')
+
 
 
 def import_data(pth=None):
@@ -41,7 +49,6 @@ def import_data(pth=None):
     dframe = None
     try:
         assert pth is not None
-
     except AssertionError as excp:
         logging.error(
             " Assertion Error - Missing input parameter: path - path to input CSV file")
@@ -83,6 +90,7 @@ def perform_eda(dframe):
     except Exception as excp:
         logging.error(" in saving chrun_distribution.png - %s ", excp.args[0])
         raise excp
+    plt.close()
 
     fig = plt.figure(figsize=(10, 5))
     dframe['Customer_Age'].plot.hist(fig = fig, title="Customer Age Distribution")
@@ -92,8 +100,9 @@ def perform_eda(dframe):
         logging.error(
             "  in saving customer_age_distribution.png - %s ", excp.args[0])
         raise excp
+    plt.close()
 
-    fig = plt.figure(figsize=(10, 5))
+    fig = plt.figure(figsize=(15, 8))
     dframe.Marital_Status.value_counts('normalize').plot(
         kind='bar', fig=fig, title="Marital Status Distribution")
     try:
@@ -102,8 +111,10 @@ def perform_eda(dframe):
         logging.error(
             " in saving marital_status_distribution.png - %s", excp.args[0])
         raise excp
+    plt.tight_layout(pad=0.7)
+    plt.close()
 
-    fig = plt.figure(figsize=(10, 5))
+    fig = plt.figure(figsize=(15, 8))
     dframe.Card_Category.value_counts().plot(
         kind='bar', fig=fig, title="Card Category Distribution")
     try:
@@ -112,8 +123,10 @@ def perform_eda(dframe):
         logging.error(
             " in saving card_category_distribution.png - %s", excp.args[0])
         raise excp
+    plt.tight_layout(pad=1.2)
+    plt.close()
 
-    fig = plt.figure(figsize=(10, 5))
+    fig = plt.figure(figsize=(15, 8))
     sns.histplot(dframe['Total_Trans_Ct'], kde=True).set_title(
         'Total Transaction Distribution')
     try:
@@ -125,15 +138,19 @@ def perform_eda(dframe):
         logging.error(
             " in saving total_transaction_distribution.png - %s", excp.args[0])
         raise excp
+    plt.close()
 
-    fig = plt.figure(figsize=(20, 10))
+    fig = plt.figure(figsize=(20, 12))
+    ax = fig.gca()
     sns.heatmap(dframe.corr(), annot=False, cmap='Dark2_r',
-                linewidths=2).set_title("Correlation Heatmap")
+                ax = ax, linewidths=2).set_title("Correlation Heatmap")
+    ax.tick_params(axis='x', labelsize='x-small')
     try:
         plt.savefig(os.path.join(eda_path, 'correlation_heatmap.png'))
     except Exception as excp:
         logging.error(" in saving correlation_heatmap.png - %s", excp.args[0])
         raise excp
+    plt.close()
 
     return 0
 
@@ -263,37 +280,37 @@ def train_models(x_train, x_test, y_train, y_test):
     # Random Forest Classifier
     rfc = RandomForestClassifier(random_state=cfg.RANDOM_SEED)
     # grid search
-    print(" Random Forest Parameter Grid Search Starts . . . ")
+    print("   Random Forest Parameter Grid Search Starts . . . ")
     cv_rf_model = GridSearchCV(estimator=rfc, param_grid=cfg.PARAM_GRID, cv=5)
-    print(" Random Forest Parameter Grid Search Completed Fitting Starts . . . ")
+    print("   Random Forest Parameter Grid Search Completed Fitting Starts . . . ")
 
-    print(" Random Forest Fitting Starts . . . ")
+    print("   Random Forest Fitting Starts . . . ")
     cv_rf_model.fit(x_train, y_train)
     rf_model = cv_rf_model.best_estimator_
-    print(" Random Forest Fitting Complete . . . ")
+    print("   Random Forest Fitting Complete . . . ")
 
     # Logistic Regression
     lr_model = LogisticRegression()
 
-    print(" Logisitic Regression Fitting Starts . . . ")
+    print("   Logisitic Regression Fitting Starts . . . ")
     lr_model.fit(x_train, y_train)
-    print(" Logisitic Regression Fitting Complete . . . ")
+    print("   Logisitic Regression Fitting Complete . . . ")
 
-    print(" Store Trained Models . . . ")
+    print("   Store Trained Models . . . ")
     save_model(rf_model, cfg.MODELS_PATH, cfg.RF_MDL_FILE)
     save_model(lr_model, cfg.MODELS_PATH, cfg.LR_MDL_FILE)
-    print(" Store Trained Models Complete. . . ")
+    print("   Store Trained Models Complete. . . ")
 
 
-    print(" Get model predictions . . . ")
+    print("   Get model predictions . . . ")
     y_train_preds_rf = rf_model.predict(x_train)
     y_test_preds_rf = rf_model.predict(x_test)
 
     y_train_preds_lr = lr_model.predict(x_train)
     y_test_preds_lr = lr_model.predict(x_test)
-    print(" Get model predictions Complete. . . ")
+    print("   Get model predictions Complete. . . ")
 
-    print(" Generate Model Performance Reports...")
+    print("   Generate Model Performance Reports...")
     classification_report_image(y_train,
                                 y_test,
                                 y_train_preds_lr,
@@ -304,7 +321,7 @@ def train_models(x_train, x_test, y_train, y_test):
     roc_plots([rf_model, lr_model], x_test, y_test)
 
     feature_importance_plot(rf_model, x_test)
-    print(" Generate Model Performance Reports Complete...")
+    print("   Generate Model Performance Reports Complete...")
     return rf_model, lr_model
 
 
@@ -367,6 +384,7 @@ def classification_report_image(y_train,
             cfg.RESULTS_PATH,
             'random_forest_classification_report.png'))
     plt.show()
+    plt.close()
 
     plt.rc('figure', figsize=(7, 5))
     # approach improved by OP -> monospace!
@@ -385,6 +403,7 @@ def classification_report_image(y_train,
             cfg.RESULTS_PATH,
             'logistic_regr_classification_report.png'))
     plt.show()
+    plt.close()
 
 
 def roc_plots(models, x_data, y_data):
@@ -407,6 +426,7 @@ def roc_plots(models, x_data, y_data):
         plot_roc_curve(model, x_data, y_data, ax=axis, alpha=0.8)
     plt.savefig(os.path.join(cfg.RESULTS_PATH, 'roc_plots.png'))
     plt.show()
+    plt.close()
 
 
 def feature_importance_plot(model, x_data, output_pth=None):
@@ -453,26 +473,54 @@ def feature_importance_plot(model, x_data, output_pth=None):
             output_pth,
             'Random_Forest_Feature_Importance_Plot'))
     plt.show()
+    plt.close()
 
 
 if __name__ == "__main__":
 
+    print(f" {timestring()} - Running churn_library (main)")
     dframe_0 = import_data(r"./data/bank_data.csv")
     if dframe_0 is None:
-        print(" ERROR: import_data() failed")
+        print(f" {timestring()} - ERROR: import_data() failed")
+        sys.exit(0)
     else:
-        print(" SUCCESS: import_data() succeeded")
+        print(f" {timestring()} - import_data() succeeded")
 
     if perform_eda(dframe_0) == -1:
-        print(" ERROR: perform_eda() failed")
+        print(f" {timestring()} - ERROR: perform_eda() failed")
         sys.exit(0)
     else:
-        print(" SUCCESS: perform_eda() succeeded")
+        print(f" {timestring()} - perform_eda() succeeded")
 
-    dframe_1 = encoder_helper(dframe_0, cfg.CAT_COLUMNS)
-    if dframe_1 is None :
-        print(" ERROR: encoder_helper() failed")
+    try:
+        dframe_1 = encoder_helper(dframe_0, cfg.CAT_COLUMNS)
+        print(f" {timestring()} - encoder_helper() succeeded")
+    except Exception as excp:
+        print(f" {timestring()} - ERROR: encoder_helper() failed")
+        sys.exit(0)
+    
+    # dframe_1 = encoder_helper(dframe_0, cfg.CAT_COLUMNS)
+    # if dframe_1 is None :
+    #     print(f" {timestring()} - ERROR: encoder_helper() failed")
+    #     sys.exit(0)
+    # else:
+    #     print(f" {timestring()} - SUCCESS: encoder_helper() succeeded")
+
+
+    x_train, x_test, y_train, y_test = perform_feature_engineering(
+        dframe_1, response=cfg.RESPONSE_COL)
+
+    if x_train.shape[0] != y_train.shape[0]:
+        print(f" {timestring()} - ERROR: perform_feature_engineering() failed -  X/y training dataset X/y shapes mismatch")
+        sys.exit(0)
+
+    if  x_test.shape[0] != y_test.shape[0]:
+        print(f" {timestring()} - ERROR: perform_feature_engineering() failed -  X/y test datasets shapes mismatch")
         sys.exit(0)
     else:
-        print(" SUCCESS: encoder_helper() succeeded")
-        print(dframe_1.head())
+        print(f" {timestring()} - perform_feature_engineering() succeeded")
+
+    _,_ = train_models(x_train, x_test, y_train, y_test)
+    print(f" {timestring()} -  train_models() complete")
+
+    print(f" {timestring()} - churn_library (main) ended.")
