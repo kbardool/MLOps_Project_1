@@ -9,8 +9,8 @@ Date  : Jan 2022
 import os
 import sys
 import logging
-import sklearn
 from datetime import datetime
+import sklearn
 import churn_library as cls
 import churn_config as cfg
 
@@ -329,44 +329,88 @@ def test_train_models(train_models):
             " rf_model type: expected LogisticRegression classifier, recevied {type(rf_model)}")
 
     ## Test 4
-    logging.info("Testing perform_eda(): TEST 4 ")
+    logging.info("Testing train_models(): TEST 4 ")
     file_name = cfg.RF_MDL_FILE
     try:
         assert os.path.exists(os.path.join(cfg.MODELS_PATH, file_name))
         logging.info(
-            "Testing perform_eda(): TEST 4 - Passed - %s exists", file_name)
+            "Testing train_models(): TEST 4 - Passed - %s exists", file_name)
     except AssertionError:
         logging.error(
-            "Testing perform_eda(): TEST 4 - Failed - %s does not exist", file_name)
+            "Testing train_models(): TEST 4 - Failed - %s does not exist", file_name)
 
     ## Test 5
-    logging.info("Testing perform_eda(): TEST 5 ")
+    logging.info("Testing train_models(): TEST 5 ")
     file_name = cfg.LR_MDL_FILE
     try:
         assert os.path.exists(os.path.join(cfg.MODELS_PATH, file_name))
         logging.info(
-            "Testing perform_eda(): TEST 5 - Passed - %s exists", file_name)
+            "Testing train_models(): TEST 5 - Passed - %s exists", file_name)
     except AssertionError:
         logging.error(
-            "Testing perform_eda(): TEST 5 - Failed - %s does not exist", file_name)
+            "Testing train_models(): TEST 5 - Failed - %s does not exist", file_name)
+
+    ## Test 6
+    logging.info("Testing train_models(): TEST 6 ")
+    file_name = cfg.RF_CLS_RPT
+    try:
+        assert os.path.exists(os.path.join(cfg.RESULTS_PATH, file_name))
+        logging.info(
+            "Testing train_models(): TEST 6 - Passed - %s exists", file_name)
+    except AssertionError:
+        logging.error(
+            "Testing train_models(): TEST 6 - Failed - %s does not exist", file_name)
+
+    ## Test 7
+    logging.info("Testing train_models(): TEST 7 ")
+    file_name = cfg.LR_CLS_RPT
+    try:
+        assert os.path.exists(os.path.join(cfg.RESULTS_PATH, file_name))
+        logging.info(
+            "Testing train_models(): TEST 7 - Passed - %s exists", file_name)
+    except AssertionError:
+        logging.error(
+            "Testing train_models(): TEST 7 - Failed - %s does not exist", file_name)
+
+    ## Test 8
+    logging.info("Testing train_models(): TEST 8 ")
+    file_name = cfg.RF_FI_RPT
+    try:
+        assert os.path.exists(os.path.join(cfg.RESULTS_PATH, file_name))
+        logging.info(
+            "Testing train_models(): TEST 8 - Passed - %s exists", file_name)
+    except AssertionError:
+        logging.error(
+            "Testing train_models(): TEST 8 - Failed - %s does not exist", file_name)
+
+    ## Test 9
+    logging.info("Testing train_models(): TEST 9 ")
+    file_name = cfg.ROC_PLOTS_RPT
+    try:
+        assert os.path.exists(os.path.join(cfg.RESULTS_PATH, file_name))
+        logging.info(
+            "Testing train_models(): TEST 9 - Passed - %s exists", file_name)
+    except AssertionError:
+        logging.error(
+            "Testing train_models(): TEST 9 - Failed - %s does not exist", file_name)
 
 
 if __name__ == "__main__":
     print(f" {timestring()} - Churn library moudles test start..")
     test_import(cls.import_data)
     print(f" {timestring()} - Test import_data() completed.... ")
-    
+
     test_eda(cls.perform_eda)
     print(f" {timestring()} - Test perform_eda() completed.... ")
-    
+
     test_encoder_helper(cls.encoder_helper)
     print(f" {timestring()} - Test encoder_helper() completed.... ")
-    
+
     test_perform_feature_engineering(cls.perform_feature_engineering)
     print(f" {timestring()} - Test perform_feature_engineering() completed.... ")
-    
+
     print(f" {timestring()} - Test train_models() start.... ")
     test_train_models(cls.train_models)
     print(f" {timestring()} - Test train_models() completed.... ")
 
-    print(f" {timestring()} - Churn library moudles test complete..")
+    print(f" {timestring()} - Churn library modules test complete..")

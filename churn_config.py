@@ -54,10 +54,17 @@ MODELS_PATH     = './models/'
 LOGGING_PATH    = './logs/'
 INPUT_PATH      = './data/'
 
-LOGGING_FILE    = 'churn_library.log'
-RF_MDL_FILE     = 'rf_model.pkl'
-LR_MDL_FILE     = 'lr_model.pkl'
 INPUT_FILE      = 'bank_data.csv'
+LOGGING_FILE    = 'churn_library.log'
+
+RF_MDL_FILE     = 'rf_model.pkl'
+RF_CLS_RPT      = 'random_forest_classification_report.png'
+RF_FI_RPT       = 'random_forest_feature_importance.png'
+
+LR_MDL_FILE     = 'lr_model.pkl'
+LR_CLS_RPT      = 'logistic_regr_classification_report.png'
+
+ROC_PLOTS_RPT   = 'roc_plots.png'
 
 TEST_SIZE = 0.3
 RANDOM_SEED = 42

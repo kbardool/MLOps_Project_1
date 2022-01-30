@@ -14,12 +14,12 @@ Date  : January 2022
 import os
 import sys
 import logging
-import pandas as pd
-import seaborn as sns
 import numpy as np
-import matplotlib.pyplot as plt
-import joblib
 from datetime import datetime
+import joblib
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
 from warnings import simplefilter
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -280,35 +280,35 @@ def train_models(x_train, x_test, y_train, y_test):
     # Random Forest Classifier
     rfc = RandomForestClassifier(random_state=cfg.RANDOM_SEED)
     # grid search
-    print("   Random Forest Parameter Grid Search Starts . . . ")
+    print("   Random Forest Classifier Parameter Grid Search Starts . . . ")
     cv_rf_model = GridSearchCV(estimator=rfc, param_grid=cfg.PARAM_GRID, cv=5)
-    print("   Random Forest Parameter Grid Search Completed Fitting Starts . . . ")
+    print("   Random Forest Parameter Grid Search Completed  . . . ")
 
-    print("   Random Forest Fitting Starts . . . ")
+    print("   Random Forest Classifier Fitting Starts . . . ")
     cv_rf_model.fit(x_train, y_train)
     rf_model = cv_rf_model.best_estimator_
-    print("   Random Forest Fitting Complete . . . ")
+    print("   Random Forest Classifier Fitting Complete . . . ")
 
     # Logistic Regression
     lr_model = LogisticRegression()
 
-    print("   Logisitic Regression Fitting Starts . . . ")
+    print("   Logisitic Regression Classifier Fitting Starts . . . ")
     lr_model.fit(x_train, y_train)
-    print("   Logisitic Regression Fitting Complete . . . ")
+    print("   Logisitic Regression Classifier Fitting Complete . . . ")
 
-    print("   Store Trained Models . . . ")
+    print("   Saved Trained Classifiers  . . . ")
     save_model(rf_model, cfg.MODELS_PATH, cfg.RF_MDL_FILE)
     save_model(lr_model, cfg.MODELS_PATH, cfg.LR_MDL_FILE)
-    print("   Store Trained Models Complete. . . ")
+    print("   Saved Trained Classifiers Complete. . . ")
 
 
-    print("   Get model predictions . . . ")
+    print("   Get Classifier Predictions for training and test datasets . . . ")
     y_train_preds_rf = rf_model.predict(x_train)
     y_test_preds_rf = rf_model.predict(x_test)
 
     y_train_preds_lr = lr_model.predict(x_train)
     y_test_preds_lr = lr_model.predict(x_test)
-    print("   Get model predictions Complete. . . ")
+    print("   Get Classiifer Predictions Complete. . . ")
 
     print("   Generate Model Performance Reports...")
     classification_report_image(y_train,
@@ -380,9 +380,7 @@ def classification_report_image(y_train,
              'fontsize': fontsize}, fontproperties='monospace')
     plt.axis('off')
     plt.savefig(
-        os.path.join(
-            cfg.RESULTS_PATH,
-            'random_forest_classification_report.png'))
+        os.path.join(cfg.RESULTS_PATH, cfg.RF_CLS_RPT))
     plt.show()
     plt.close()
 
@@ -399,9 +397,7 @@ def classification_report_image(y_train,
 
     plt.axis('off')
     plt.savefig(
-        os.path.join(
-            cfg.RESULTS_PATH,
-            'logistic_regr_classification_report.png'))
+        os.path.join(cfg.RESULTS_PATH, cfg.LR_CLS_RPT))
     plt.show()
     plt.close()
 
@@ -424,12 +420,12 @@ def roc_plots(models, x_data, y_data):
     axis = plt.gca()
     for model in models:
         plot_roc_curve(model, x_data, y_data, ax=axis, alpha=0.8)
-    plt.savefig(os.path.join(cfg.RESULTS_PATH, 'roc_plots.png'))
+    plt.savefig(os.path.join(cfg.RESULTS_PATH, cfg.ROC_PLOTS_RPT))
     plt.show()
     plt.close()
 
 
-def feature_importance_plot(model, x_data, output_pth=None):
+def feature_importance_plot(model, x_data):
     '''
     creates and stores the feature importances in pth
 
@@ -442,8 +438,6 @@ def feature_importance_plot(model, x_data, output_pth=None):
              None - Results written as 'feature_importance_plot.png'
                     to path indicated in cfg.results_path
     '''
-    if output_pth is None:
-        output_pth = cfg.RESULTS_PATH
 
     # Calculate feature importances
     # importances = cv_rfc.best_estimator_.feature_importances_
@@ -469,9 +463,7 @@ def feature_importance_plot(model, x_data, output_pth=None):
                names, rotation=45, fontsize='small')
     plt.tight_layout(pad=1.2)
     plt.savefig(
-        os.path.join(
-            output_pth,
-            'Random_Forest_Feature_Importance_Plot'))
+        os.path.join(cfg.RESULTS_PATH, cfg.RF_FI_RPT))
     plt.show()
     plt.close()
 
@@ -479,7 +471,8 @@ def feature_importance_plot(model, x_data, output_pth=None):
 if __name__ == "__main__":
 
     print(f" {timestring()} - Running churn_library (main)")
-    dframe_0 = import_data(r"./data/bank_data.csv")
+    dframe_0 = import_data(os.path.join(cfg.INPUT_PATH, cfg.INPUT_FILE))
+
     if dframe_0 is None:
         print(f" {timestring()} - ERROR: import_data() failed")
         sys.exit(0)
@@ -495,32 +488,28 @@ if __name__ == "__main__":
     try:
         dframe_1 = encoder_helper(dframe_0, cfg.CAT_COLUMNS)
         print(f" {timestring()} - encoder_helper() succeeded")
-    except Exception as excp:
+    except Exception as excp_0:
         print(f" {timestring()} - ERROR: encoder_helper() failed")
         sys.exit(0)
-    
-    # dframe_1 = encoder_helper(dframe_0, cfg.CAT_COLUMNS)
-    # if dframe_1 is None :
-    #     print(f" {timestring()} - ERROR: encoder_helper() failed")
-    #     sys.exit(0)
-    # else:
-    #     print(f" {timestring()} - SUCCESS: encoder_helper() succeeded")
 
-
-    x_train, x_test, y_train, y_test = perform_feature_engineering(
+    X_train, X_test, Y_train, Y_test = perform_feature_engineering(
         dframe_1, response=cfg.RESPONSE_COL)
 
-    if x_train.shape[0] != y_train.shape[0]:
-        print(f" {timestring()} - ERROR: perform_feature_engineering() failed -  X/y training dataset X/y shapes mismatch")
+    if X_train.shape[0] != Y_train.shape[0]:
+        print(f" {timestring()} - ERROR: perform_feature_engineering() failed -"
+              f"  X/y training dataset X/y shapes mismatch")
         sys.exit(0)
 
-    if  x_test.shape[0] != y_test.shape[0]:
-        print(f" {timestring()} - ERROR: perform_feature_engineering() failed -  X/y test datasets shapes mismatch")
+    if  X_test.shape[0] != Y_test.shape[0]:
+        print(f" {timestring()} - ERROR: perform_feature_engineering() failed -  "
+              f"X/y test datasets shapes mismatch")
         sys.exit(0)
     else:
         print(f" {timestring()} - perform_feature_engineering() succeeded")
 
-    _,_ = train_models(x_train, x_test, y_train, y_test)
+    _,_ = train_models(X_train, X_test, Y_train, Y_test)
+
     print(f" {timestring()} -  train_models() complete")
 
     print(f" {timestring()} - churn_library (main) ended.")
+    
